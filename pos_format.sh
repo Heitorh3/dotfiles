@@ -59,6 +59,9 @@ DIRETORIO_DOWNLOADS="$HOME/Downloads/programas"
 KEYRINGS_DIR="/etc/apt/keyrings"
 DOTFILES_DIR="$HOME/dotfiles"
 DOTFILES_REPO="git@github.com:Heitorh3/dotfiles.git"
+# Fallback para quando a chave SSH ainda não está disponível (ex: máquina
+# recém-formatada, antes de abrir o Bitwarden e habilitar o SSH Agent).
+DOTFILES_REPO_HTTPS="https://github.com/Heitorh3/dotfiles.git"
 
 URL_GOOGLE_CHROME="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 URL_VSCODE="https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
@@ -343,14 +346,19 @@ fi
 # ----------------------------- DOTFILES ----------------------------- #
 if [ -d "$DOTFILES_DIR/.git" ]; then
   run_optional "Atualizar ~/dotfiles" git -C "$DOTFILES_DIR" pull --ff-only
+elif git clone "$DOTFILES_REPO" "$DOTFILES_DIR" 2>/dev/null; then
+  log_ok "Clonar ~/dotfiles (SSH)"
 else
-  run_optional "Clonar ~/dotfiles" git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
+  log_err "Clonar ~/dotfiles via SSH falhou (chave ainda não disponível? veja o Bitwarden SSH Agent no README) — tentando via HTTPS."
+  run_optional "Clonar ~/dotfiles (HTTPS)" git clone "$DOTFILES_REPO_HTTPS" "$DOTFILES_DIR"
 fi
 
 if [ -x "$DOTFILES_DIR/install.sh" ]; then
   "$DOTFILES_DIR/install.sh"
 elif [ -f "$DOTFILES_DIR/install.sh" ]; then
   bash "$DOTFILES_DIR/install.sh"
+else
+  log_err "~/dotfiles/install.sh não encontrado — os symlinks não foram criados. Resolva o acesso ao repositório e rode '~/dotfiles/install.sh' manualmente."
 fi
 
 # minikube via asdf, na versão fixada em .tool-versions do dotfiles
