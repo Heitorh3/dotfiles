@@ -39,9 +39,51 @@ Depois de rodar o script:
 
 1. Preencha `HF_TOKEN` em `~/.config/fish/config.fish` (ou remova a linha se
    não usar).
-2. Gere/restaure suas chaves SSH manualmente em `~/.ssh/` (não incluídas aqui).
+2. Restaure suas chaves SSH manualmente em `~/.ssh/` (veja
+   [Restaurando as chaves SSH](#restaurando-as-chaves-ssh) abaixo — não são
+   versionadas aqui).
 3. Instale as ferramentas que os configs esperam (fish, starship, asdf, bat,
    btop, htop, lazygit, lazydocker) via seu gerenciador de pacotes preferido.
+
+## Restaurando as chaves SSH
+
+O `.ssh/config` deste repositório espera uma chave em `~/.ssh/id_ed25519`
+(`IdentityFile ~/.ssh/id_ed25519`). Como chaves privadas nunca são
+versionadas, escolha um dos dois caminhos abaixo depois de formatar a
+máquina:
+
+### Tenho um backup da chave
+
+1. Copie `id_ed25519` e `id_ed25519.pub` para `~/.ssh/`.
+2. Ajuste as permissões (o SSH recusa a chave se estiverem erradas):
+   ```bash
+   mkdir -p ~/.ssh
+   chmod 700 ~/.ssh
+   chmod 600 ~/.ssh/id_ed25519
+   chmod 644 ~/.ssh/id_ed25519.pub
+   ```
+3. Rode `./install.sh` (ou rode de novo) para linkar o `.ssh/config`.
+4. Adicione a chave ao agent e teste o acesso ao GitHub:
+   ```bash
+   ssh-add ~/.ssh/id_ed25519
+   ssh -T git@github.com
+   ```
+
+### Não tenho backup (chave perdida)
+
+1. Gere um par novo:
+   ```bash
+   ssh-keygen -t ed25519 -C "seu-email@exemplo.com" -f ~/.ssh/id_ed25519
+   ```
+2. Copie a chave pública e cadastre em cada serviço que usava a chave antiga
+   (GitHub → Settings → SSH and GPG keys, e qualquer servidor próprio):
+   ```bash
+   cat ~/.ssh/id_ed25519.pub
+   ```
+3. Revogue/remova a chave antiga desses mesmos serviços, já que ela ficou
+   para trás na máquina formatada.
+4. Rode `./install.sh` para linkar o `.ssh/config`, depois `ssh-add
+   ~/.ssh/id_ed25519` e teste com `ssh -T git@github.com`.
 
 ## Segredos via Bitwarden
 
