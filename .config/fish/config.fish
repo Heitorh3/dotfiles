@@ -21,8 +21,8 @@ set -U fish_user_paths $fish_user_paths $HOME/.starship/cache
 set -x ASDF_DATA_DIR $HOME/.asdf $PATH
 #set PATH $PATH/usr/local/bin/go/bin/
 
-#hugginface
-set -x HF_TOKEN "SEU_TOKEN_AQUI"  # obtenha em https://huggingface.co/settings/tokens
+#hugginface — carregado sob demanda do Bitwarden, rode `hf_token` quando precisar
+# (evita pedir a master password em todo terminal novo)
 
 starship init fish | source
 
