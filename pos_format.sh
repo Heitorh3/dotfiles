@@ -292,7 +292,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 if command -v nvm >/dev/null 2>&1; then
-  nvm install --lts >/dev/null 2>&1 || true
+  run_optional "Node LTS (via nvm)" nvm install --lts
   command -v pnpm >/dev/null 2>&1 || run_optional "pnpm" npm install -g pnpm
   command -v bun  >/dev/null 2>&1 || run_optional "bun"  npm install -g bun
   command -v bw   >/dev/null 2>&1 || run_optional "Bitwarden CLI" npm install -g @bitwarden/cli
