@@ -341,9 +341,9 @@ else
 fi
 
 if [ -x "$DOTFILES_DIR/install.sh" ]; then
-  "$DOTFILES_DIR/install.sh"
+  run_optional "Rodar ~/dotfiles/install.sh" "$DOTFILES_DIR/install.sh"
 elif [ -f "$DOTFILES_DIR/install.sh" ]; then
-  bash "$DOTFILES_DIR/install.sh"
+  run_optional "Rodar ~/dotfiles/install.sh" bash "$DOTFILES_DIR/install.sh"
 else
   log_err "~/dotfiles/install.sh não encontrado — os symlinks não foram criados. Resolva o acesso ao repositório e rode '~/dotfiles/install.sh' manualmente."
 fi
