@@ -360,4 +360,4 @@ sudo apt autoclean
 sudo apt autoremove -y
 
 log_ok "Pós-instalação concluída."
-log_info "Pendências manuais: abrir o Bitwarden Desktop e habilitar o SSH Agent (a chave id_ed25519 é servida pelo cofre, ver README do dotfiles), 'bw login' + item HF_TOKEN, e relogar para o grupo docker/shell fish valerem."
+log_info "Pendências manuais: abrir o Bitwarden Desktop e habilitar o SSH Agent (a chave id_ed25519 é servida pelo cofre, ver README do dotfiles), 'bwcli login' + item HF_TOKEN, e relogar para o grupo docker/shell fish valerem."

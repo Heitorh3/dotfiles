@@ -121,7 +121,11 @@ cofre do Bitwarden e são carregados sob demanda no terminal, via
 
 Como funciona:
 
-- `bw_session` chama `bw unlock` (pede a master password) só se a sessão
+- `bwcli` é uma function que chama o binário `bw` do Bitwarden CLI direto
+  pelo caminho instalado via npm — existe pra não colidir com um `/bin/bw`
+  do sistema (outro programa, nada a ver com Bitwarden) que pode vir na
+  frente no `$PATH`.
+- `bw_session` chama `bwcli unlock` (pede a master password) só se a sessão
   atual não estiver válida, e guarda o resultado em `$BW_SESSION` pro resto
   do terminal.
 - `hf_token` usa `bw_session` pra buscar o item chamado `HF_TOKEN` no cofre
@@ -130,8 +134,8 @@ Como funciona:
 Setup necessário (não versionado, tem que ser feito à mão em cada máquina):
 
 ```bash
-npm install -g @bitwarden/cli   # instala o `bw`
-bw login seu-email@exemplo.com  # login interativo (pede master password/2FA)
+npm install -g @bitwarden/cli     # instala o `bw`
+bwcli login seu-email@exemplo.com # login interativo (pede master password/2FA)
 ```
 
 Depois, crie um item no cofre chamado exatamente `HF_TOKEN` — um *Secure
@@ -144,7 +148,7 @@ shell. Não fica em nenhum arquivo em disco.
 
 Esse mesmo padrão serve pra qualquer outro segredo: crie uma function nova
 (`.config/fish/functions/<nome>.fish`) seguindo o modelo de `hf_token.fish`,
-trocando o nome do item buscado no `bw get item`.
+trocando o nome do item buscado no `bwcli get item`.
 
 ## Atualizando o repositório com mudanças locais
 
