@@ -101,6 +101,7 @@ PACOTES_APT_TERCEIROS=(
   insync
   insync-nemo
   slack-desktop
+  zoxide
 )
 # ---------------------------------------------------------------------- #
 
