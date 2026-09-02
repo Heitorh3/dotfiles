@@ -31,35 +31,14 @@ set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH
 set -gx PATH /usr/local/go/bin $PATH
 
-# if command -v keychain >/dev/null
-#     keychain --eval --agents ssh id_ed25519 | source
-# end
-
-# Configuração do SSH Agent para Fish
-function start_ssh_agent
-    # Verificar se já temos um agent rodando e a chave carregada
-    if ssh-add -l 2>/dev/null | grep -q "id_ed25519"
-        return 0
-    end
-    
-    # Tentar conectar a um agent existente
-    for sock in /tmp/ssh-*/agent.*
-        if test -S "$sock"
-            set -x SSH_AUTH_SOCK $sock
-            # Verificar se este agent tem nossa chave
-            if ssh-add -l 2>/dev/null | grep -q "id_ed25519"
-                return 0
-            end
-        end
-    end
-    
-    # Nenhum agent válido com nossa chave, iniciar novo
-    eval (ssh-agent -c)
-    ssh-add ~/.ssh/id_ed25519
+# SSH Agent: usa o agent do Bitwarden Desktop (SSH Agent habilitado em
+# Configurações > SSH Agent no app) — a chave privada fica só no cofre,
+# nunca em disco. Se o Bitwarden não estiver rodando, cai pro agent do
+# sistema (gnome-keyring/ssh-agent) e não faz nada.
+set -l bw_ssh_sock "$HOME/.bitwarden-ssh-agent.sock"
+if test -S "$bw_ssh_sock"
+    set -x SSH_AUTH_SOCK $bw_ssh_sock
 end
-
-# Chamar a função na inicialização
-# start_ssh_agent
 
 # Aliases
 alias ccm="git diff | cody chat --stdin -m 'Write a commit message for this diff'"

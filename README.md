@@ -48,11 +48,39 @@ Depois de rodar o script:
 ## Restaurando as chaves SSH
 
 O `.ssh/config` deste repositório espera uma chave em `~/.ssh/id_ed25519`
-(`IdentityFile ~/.ssh/id_ed25519`). Como chaves privadas nunca são
-versionadas, escolha um dos dois caminhos abaixo depois de formatar a
-máquina:
+(`IdentityFile ~/.ssh/id_ed25519`). Chaves privadas nunca são versionadas
+aqui — escolha um dos caminhos abaixo depois de formatar a máquina.
 
-### Tenho um backup da chave
+### Opção recomendada: Bitwarden SSH Agent
+
+A chave fica só dentro do cofre do Bitwarden (nunca em disco em
+`~/.ssh/`), servida por um agent que o app desktop expõe em
+`~/.bitwarden-ssh-agent.sock`. O `.config/fish/config.fish` deste repo já
+aponta `$SSH_AUTH_SOCK` pra esse socket automaticamente quando ele existe
+(veja o trecho perto do início do arquivo).
+
+1. Instale/abra o **Bitwarden Desktop** e faça login.
+2. Em Configurações → SSH Agent, habilite o agent.
+3. No cofre, confira se existe um item do tipo **SSH key** com a chave
+   `id_ed25519` (se for a primeira vez, importe a chave existente ou gere
+   uma nova direto ali).
+4. Rode `./install.sh` para linkar o `config.fish`, abra um terminal novo e
+   teste:
+   ```bash
+   ssh-add -l          # deve listar a chave servida pelo Bitwarden
+   ssh -T git@github.com
+   ```
+
+Se o Bitwarden não estiver rodando, o `config.fish` simplesmente não mexe
+em `$SSH_AUTH_SOCK` e o sistema cai no agent padrão (gnome-keyring), sem
+travar nada.
+
+### Alternativa: arquivo de chave em disco
+
+Caso prefira não depender do Bitwarden para SSH (ou ele não esteja
+disponível no momento):
+
+**Tenho um backup da chave**
 
 1. Copie `id_ed25519` e `id_ed25519.pub` para `~/.ssh/`.
 2. Ajuste as permissões (o SSH recusa a chave se estiverem erradas):
@@ -69,7 +97,7 @@ máquina:
    ssh -T git@github.com
    ```
 
-### Não tenho backup (chave perdida)
+**Não tenho backup (chave perdida)**
 
 1. Gere um par novo:
    ```bash
