@@ -23,7 +23,7 @@ Enterprise_Naming_Scheme-voidstars = 'void**'
 #format = "on [$symbol($username)]($style) in azure "
 #symbol = ''
 
-[battery.display]
+[[battery.display]]
 threshold = 10
 style = 'bold red'
 
