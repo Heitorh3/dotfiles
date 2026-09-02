@@ -3,7 +3,7 @@
 # post_install.sh — script de pós-instalação para Linux Mint (base Ubuntu Noble).
 #
 # Reinstala os apps do dia a dia que rodam nesta máquina (Chrome, VS Code, Docker,
-# kubectl, Slack, Spotify, Insync, AnyDesk, Azure CLI, Warp, DBeaver, Discord, ...),
+# kubectl, Slack, Spotify, Insync, Azure CLI, Warp, DBeaver, Discord, ...),
 # as ferramentas de terminal usadas pelo ~/dotfiles (fish, starship, asdf, eza,
 # zoxide, bat, btop, lazygit, lazydocker, fisher) e no final clona/aplica o
 # ~/dotfiles. Baseado originalmente no tutorial de Fernando Souza
@@ -82,6 +82,7 @@ PACOTES_APT_BASE=(
   flameshot
   7zip
   gh
+  filezilla
 )
 
 # Pacotes que dependem de repositórios de terceiros adicionados abaixo
@@ -99,10 +100,7 @@ PACOTES_APT_TERCEIROS=(
   copyq
   insync
   insync-nemo
-  spotify-client
   slack-desktop
-  anydesk
-  warpinator
 )
 # ---------------------------------------------------------------------- #
 
@@ -158,23 +156,11 @@ run_optional "Repositório Insync" add_keyed_repo \
   "https://d2t3ff60b2tol4.cloudfront.net/DEB-GPG-KEY-INSYNC" \
   "$KEYRINGS_DIR/insync.gpg"
 
-run_optional "Repositório Spotify" add_keyed_repo \
-  "spotify.list" \
-  "deb https://repository.spotify.com stable non-free" \
-  "https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg" \
-  "$KEYRINGS_DIR/spotify.gpg"
-
 run_optional "Repositório Slack" add_keyed_repo \
   "slack.list" \
   "deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main" \
   "https://packagecloud.io/slacktechnologies/slack/gpgkey" \
   "$KEYRINGS_DIR/slack.gpg"
-
-run_optional "Repositório AnyDesk" add_keyed_repo \
-  "anydesk-stable.list" \
-  "deb [signed-by=$KEYRINGS_DIR/anydesk.gpg] http://deb.anydesk.com/ all main" \
-  "https://keys.anydesk.com/repos/DEB-GPG-KEY" \
-  "$KEYRINGS_DIR/anydesk.gpg"
 
 run_optional "Repositório Warp terminal" add_keyed_repo \
   "warpdotdev.list" \
