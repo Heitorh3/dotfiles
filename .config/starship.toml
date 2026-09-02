@@ -1,0 +1,100 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Insere uma linha branca entre os prompts do shell
+#add_newline = true
+
+[aws]
+format = 'on [$symbol($profile )(\($region\) )]($style)'
+style = 'bold blue'
+symbol = '🅰 '
+
+[aws.region_aliases]
+ap-southeast-2 = 'au'
+us-east-1 = 'va'
+
+[aws.profile_aliases]
+CompanyGroupFrobozzOnCallAccess = 'Frobozz'
+Enterprise_Naming_Scheme-voidstars = 'void**'
+
+#[azure]
+#disabled = false
+#format = 'on [$symbol($subscription)]($style) '
+#format = "on [$symbol($username)]($style) in azure "
+#symbol = ''
+
+[battery.display]
+threshold = 10
+style = 'bold red'
+
+[battery]
+full_symbol = '🔋 '
+charging_symbol = '⚡️ '
+discharging_symbol = '💀 '
+
+# [dependencies]
+[character]
+success_symbol = '[➜](bold green) '
+error_symbol = '[✗](bold red) '
+
+[directory]
+truncation_length = 8
+truncation_symbol = '…/'
+
+[memory_usage]
+disabled = true
+threshold = -1
+symbol = '🐏 '
+style = 'bold dimmed green'
+
+# Disable the package module, hiding it from the prompt completely
+[package]
+disabled = true
+
+[docker_context]
+disabled=false
+format = 'via docker [🐋 $context](blue bold)'
+
+[git_branch]
+symbol = '🌱 '
+truncation_length = 8
+truncation_symbol = '…/'
+#ignore_branches = ['master', 'main']
+
+[git_commit]
+commit_hash_length = 4
+tag_symbol = '🔖 '
+
+[git_state]
+format = '[\($state( $progress_current of $progress_total)\)]($style)'
+cherry_pick = '[🍒 PICKING](bold red)'
+
+[git_metrics]
+added_style = 'bold blue'
+format = '[+$added]($added_style)/[-$deleted]($deleted_style)'
+
+[git_status]
+conflicted = '🏳'
+ahead = '🏎💨'
+behind = '😰'
+diverged = '😵'
+up_to_date = '✓'
+untracked = '🤷'
+stashed = '📦'
+modified = '📝'
+staged = '[++\($count\)](green)'
+renamed = '👅'
+deleted = '🗑'
+
+[nodejs]
+format = 'via [🤖 $version](bold green) '
+
+[python]
+symbol = '👾 '
+pyenv_version_name = true
+python_binary = 'python3'
+
+[sudo]
+style = 'bold green'
+symbol = '👩‍💻 '
+disabled = false
