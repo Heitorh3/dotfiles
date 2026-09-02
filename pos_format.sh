@@ -83,6 +83,7 @@ PACOTES_APT_BASE=(
   7zip
   gh
   filezilla
+  vim
 )
 
 # Pacotes que dependem de repositórios de terceiros adicionados abaixo
