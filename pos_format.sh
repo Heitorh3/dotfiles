@@ -102,6 +102,7 @@ PACOTES_APT_TERCEIROS=(
   insync
   insync-nemo
   slack-desktop
+  zoxide
 )
 # ---------------------------------------------------------------------- #
 
@@ -292,7 +293,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 if command -v nvm >/dev/null 2>&1; then
-  nvm install --lts >/dev/null 2>&1 || true
+  run_optional "Node LTS (via nvm)" nvm install --lts
   command -v pnpm >/dev/null 2>&1 || run_optional "pnpm" npm install -g pnpm
   command -v bun  >/dev/null 2>&1 || run_optional "bun"  npm install -g bun
   command -v bw   >/dev/null 2>&1 || run_optional "Bitwarden CLI" npm install -g @bitwarden/cli
@@ -341,9 +342,9 @@ else
 fi
 
 if [ -x "$DOTFILES_DIR/install.sh" ]; then
-  "$DOTFILES_DIR/install.sh"
+  run_optional "Rodar ~/dotfiles/install.sh" "$DOTFILES_DIR/install.sh"
 elif [ -f "$DOTFILES_DIR/install.sh" ]; then
-  bash "$DOTFILES_DIR/install.sh"
+  run_optional "Rodar ~/dotfiles/install.sh" bash "$DOTFILES_DIR/install.sh"
 else
   log_err "~/dotfiles/install.sh não encontrado — os symlinks não foram criados. Resolva o acesso ao repositório e rode '~/dotfiles/install.sh' manualmente."
 fi

@@ -98,8 +98,6 @@ function nas
     echo "🛢️ units assembled successfully!"    
 end
 
-source ~/.asdf/asdf.fish
-
 # ASDF configuration code
 # if test -z $ASDF_DATA_DIR
 #     set _asdf_shims "$HOME/.asdf/shims"
