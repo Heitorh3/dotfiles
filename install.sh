@@ -31,6 +31,8 @@ TARGETS=(
   ".config/htop/htoprc"
   ".config/lazygit/config.yml"
   ".config/lazydocker/config.yml"
+  ".config/Code/User/settings.json"
+  ".config/Code/User/keybindings.json"
 )
 
 link_one() {

@@ -1,0 +1,15 @@
+// Empty
+[
+  {
+    "key": "ctrl+shift+d",
+    "command": "editor.action.duplicateSelection"
+  },
+  {
+    "key": "ctrl+shift+alt+f4",
+    "command": "editor.action.transformToLowercase"
+  },
+  {
+    "key": "ctrl+shift+alt+f3",
+    "command": "editor.action.transformToUppercase"
+  }
+]

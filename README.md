@@ -11,17 +11,32 @@ ambiente após uma formatação.
 - Versões de ferramentas (asdf): `.tool-versions`
 - SSH: `.ssh/config` (apenas o arquivo de configuração — **nenhuma chave privada é versionada**)
 - Ferramentas de terminal: `.config/bat`, `.config/btop`, `.config/htop`, `.config/lazygit`, `.config/lazydocker`
+- Editor: `.config/Code/User/settings.json`, `.config/Code/User/keybindings.json`
+  (preferências apenas — extensões são reinstaladas pela lista em
+  `pos_format.sh`, não versionadas aqui; ver nota sobre o token do GitHub
+  abaixo)
 
 ## O que **não** está aqui (de propósito)
 
 Chaves SSH/GPG, credenciais AWS/Azure, tokens do `gh`, histórico de shell,
-sessões/estado de apps (Discord, Slack, Cursor, VS Code, navegador) e qualquer
-outro segredo. Esses arquivos ficam fora de controle de versão por segurança.
+sessões/estado de apps (Discord, Slack, Cursor, navegador) — e qualquer outro
+segredo, incluindo o resto da pasta `.config/Code/User/` (histórico,
+workspaceStorage, globalStorage, sync/, etc.). Esses arquivos ficam fora de
+controle de versão por segurança.
 
 O `.config/fish/config.fish` tinha uma variável `HF_TOKEN` (token da Hugging
 Face) com o valor real hardcoded — isso foi removido. O token agora vive no
 Bitwarden e é carregado sob demanda pela função `hf_token` (veja
 [Segredos via Bitwarden](#segredos-via-bitwarden) abaixo).
+
+O `.config/Code/User/settings.json` tinha, na configuração `cody.mcpServers`,
+um GitHub Personal Access Token hardcoded em texto puro (duas vezes). Como
+esse repositório é **público**, isso teria vazado o token assim que o arquivo
+fosse versionado. O token foi removido e trocado por `${env:GITHUB_PERSONAL_ACCESS_TOKEN}`
+— o mesmo padrão do `HF_TOKEN`, carregado sob demanda pela função
+`github_token` (Bitwarden). **Se você reconhece esse token, revogue-o em
+https://github.com/settings/tokens — ele ficou exposto em disco em texto
+puro.**
 
 ## Como usar após formatar a máquina
 
@@ -130,6 +145,10 @@ Como funciona:
   do terminal.
 - `hf_token` usa `bw_session` pra buscar o item chamado `HF_TOKEN` no cofre
   e exportar `$HF_TOKEN` na sessão atual.
+- `github_token` funciona igual, mas busca o item `GITHUB_PERSONAL_ACCESS_TOKEN`
+  e exporta `$GITHUB_PERSONAL_ACCESS_TOKEN` — é o valor que o
+  `cody.mcpServers` do VS Code (`.config/Code/User/settings.json`) espera via
+  `${env:GITHUB_PERSONAL_ACCESS_TOKEN}`.
 
 Setup necessário (não versionado, tem que ser feito à mão em cada máquina):
 
@@ -141,10 +160,16 @@ bwcli login seu-email@exemplo.com # login interativo (pede master password/2FA)
 Depois, crie um item no cofre chamado exatamente `HF_TOKEN` — um *Secure
 Note* com o token no campo de notas (ou um item *Login* com o token no campo
 de senha). Pode ser pela UI do Bitwarden (app desktop/extensão) ou pela CLI.
+Repita o mesmo para um item chamado `GITHUB_PERSONAL_ACCESS_TOKEN`.
 
-Uso diário: sempre que precisar do token, rode `hf_token` no terminal — ele
-desbloqueia o cofre (se preciso) e exporta `$HF_TOKEN` só naquela sessão do
-shell. Não fica em nenhum arquivo em disco.
+Uso diário: sempre que precisar do token, rode `hf_token` (ou `github_token`)
+no terminal — ele desbloqueia o cofre (se preciso) e exporta a variável só
+naquela sessão do shell. Não fica em nenhum arquivo em disco.
+
+Importante para o `github_token`: como o valor vem de `${env:...}`, o
+VS Code só enxerga a variável se for **aberto a partir de um terminal** onde
+`github_token` já rodou antes (ex: `github_token; code .`) — abrir pelo ícone
+do launcher/desktop não herda a variável.
 
 Esse mesmo padrão serve pra qualquer outro segredo: crie uma function nova
 (`.config/fish/functions/<nome>.fish`) seguindo o modelo de `hf_token.fish`,
