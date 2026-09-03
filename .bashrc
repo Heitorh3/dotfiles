@@ -116,9 +116,8 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Verificar se o cargo é necessário, caso contrário, remover
-# PATH=~/.console-ninja/.bin:$PATH
-# . "$HOME/.cargo/env"
+PATH=~/.console-ninja/.bin:$PATH
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
