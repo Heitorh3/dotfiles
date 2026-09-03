@@ -311,6 +311,10 @@ if [ ! -d /usr/local/go ]; then
   '
 fi
 
+if [ ! -d "$HOME/.cargo" ]; then
+  run_optional "Rust (rustup)" bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
+fi
+
 if [ ! -d "$HOME/miniconda3" ]; then
   run_optional "Miniconda" bash -c '
     tmp=$(mktemp -d)
