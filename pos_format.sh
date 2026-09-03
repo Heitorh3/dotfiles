@@ -69,7 +69,7 @@ URL_DISCORD="https://discord.com/api/download?platform=linux&format=deb"
 URL_DBEAVER_CE="https://dbeaver.io/files/dbeaver-ce_latest_amd64.deb"
 # Verifique se este link ainda é válido antes de rodar; o site costuma mudar o
 # padrão de nome. Baixe manualmente em https://www.4kdownload.com/downloads se falhar.
-URL_4K_VIDEO_DOWNLOADER="https://dl.4kdownload.com/app/4kvideodownloaderplus_amd64.deb"
+#URL_4K_VIDEO_DOWNLOADER="https://dl.4kdownload.com/app/4kvideodownloaderplus_amd64.deb"
 
 # Pacotes comuns via apt (sem repositório extra, universe/multiverse já bastam)
 PACOTES_APT_BASE=(
@@ -233,7 +233,7 @@ run_optional "Google Chrome"        baixar_e_instalar_deb "google-chrome" "$URL_
 run_optional "Visual Studio Code"   baixar_e_instalar_deb "vscode" "$URL_VSCODE"
 run_optional "Discord"              baixar_e_instalar_deb "discord" "$URL_DISCORD"
 run_optional "DBeaver CE"           baixar_e_instalar_deb "dbeaver-ce" "$URL_DBEAVER_CE"
-run_optional "4K Video Downloader+" baixar_e_instalar_deb "4kvideodownloaderplus" "$URL_4K_VIDEO_DOWNLOADER"
+# run_optional "4K Video Downloader+" baixar_e_instalar_deb "4kvideodownloaderplus" "$URL_4K_VIDEO_DOWNLOADER"
 
 # ----------------------------- FLATPAK ----------------------------- #
 run_optional "Bitwarden (flatpak)" flatpak install -y --noninteractive flathub com.bitwarden.desktop
