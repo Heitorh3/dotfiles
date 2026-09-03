@@ -155,7 +155,7 @@ run_optional "Repositório eza" add_keyed_repo \
 run_optional "Repositório Insync" add_keyed_repo \
   "insync.list" \
   "deb [signed-by=$KEYRINGS_DIR/insync.gpg] http://apt.insync.io/mint xia non-free contrib" \
-  "https://d2t3ff60b2tol4.cloudfront.net/DEB-GPG-KEY-INSYNC" \
+  "https://apt.insync.io/insynchq.gpg" \
   "$KEYRINGS_DIR/insync.gpg"
 
 run_optional "Repositório Slack" add_keyed_repo \
