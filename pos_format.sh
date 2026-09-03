@@ -237,8 +237,8 @@ run_optional "DBeaver CE"           baixar_e_instalar_deb "dbeaver-ce" "$URL_DBE
 
 # ----------------------------- FLATPAK ----------------------------- #
 run_optional "Bitwarden (flatpak)" flatpak install -y --noninteractive flathub com.bitwarden.desktop
-run_optional "Telegram (flatpak)"  flatpak install -y --noninteractive flathub org.telegram.desktop
-run_optional "OBS Studio (flatpak)" flatpak install -y --noninteractive flathub com.obsproject.Studio
+# run_optional "Telegram (flatpak)"  flatpak install -y --noninteractive flathub org.telegram.desktop
+# run_optional "OBS Studio (flatpak)" flatpak install -y --noninteractive flathub com.obsproject.Studio
 
 # ----------------------------- DOCKER: pós-instalação ----------------------------- #
 if command -v docker >/dev/null 2>&1; then

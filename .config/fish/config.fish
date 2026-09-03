@@ -149,5 +149,4 @@ else
 end
 # <<< conda initialize <<<
 
-
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv fish)"
