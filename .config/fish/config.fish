@@ -55,7 +55,7 @@ alias cat="bat --theme=\$(read -globalDomain AppleInterfaceStyle &> /dev/null &&
 
 alias l="ls -la"
 alias ls="eza --color=always --long --git --icons=always"
-alias cd="z"
+#alias cd="z"
 alias bat="batcat"
 alias batdiff="git diff --name-only --relative --diff-filter=d | xargs batcat --diff"
 
