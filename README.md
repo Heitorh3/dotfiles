@@ -12,9 +12,8 @@ ambiente após uma formatação.
 - SSH: `.ssh/config` (apenas o arquivo de configuração — **nenhuma chave privada é versionada**)
 - Ferramentas de terminal: `.config/bat`, `.config/btop`, `.config/htop`, `.config/lazygit`, `.config/lazydocker`
 - Editor: `.config/Code/User/settings.json`, `.config/Code/User/keybindings.json`
-  (preferências apenas — extensões são reinstaladas pela lista em
-  `pos_format.sh`, não versionadas aqui; ver nota sobre o token do GitHub
-  abaixo)
+  (preferências apenas — extensões não são versionadas aqui; ver nota sobre o
+  token do GitHub abaixo)
 
 ## O que **não** está aqui (de propósito)
 
