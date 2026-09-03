@@ -35,7 +35,7 @@ run_optional() {
 clear
 
 # ----------------------------- REQUISITOS ----------------------------- #
-for cmd in dpkg apt wget curl git ping gpg flatpak; do
+for cmd in dpkg apt wget curl git gpg flatpak; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
     log_err "Comando obrigatório não encontrado: $cmd"
     exit 1
@@ -43,7 +43,7 @@ for cmd in dpkg apt wget curl git ping gpg flatpak; do
 done
 
 log_info "Verificando o acesso à internet..."
-if ping -c 3 -W 2 www.google.com.br >/dev/null 2>&1; then
+if curl -fsS --max-time 5 https://www.google.com.br >/dev/null 2>&1; then
   log_ok "Conexão com a internet funcionando normalmente."
 else
   log_err "Sem conexão com a internet. Verifique a rede antes de continuar."
@@ -107,8 +107,21 @@ PACOTES_APT_TERCEIROS=(
 # ---------------------------------------------------------------------- #
 
 # ----------------------------- APT: destravar e atualizar ----------------------------- #
-if sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1 || sudo fuser /var/cache/apt/archives/lock >/dev/null 2>&1; then
-  log_err "apt/dpkg parece estar em uso por outro processo — não vou remover os locks."
+apt_locked() {
+  sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1 || sudo fuser /var/cache/apt/archives/lock >/dev/null 2>&1
+}
+
+if apt_locked; then
+  log_info "apt/dpkg em uso por outro processo — aguardando liberar (até 2 min)..."
+  for _ in $(seq 1 24); do
+    sleep 5
+    apt_locked || break
+  done
+  if apt_locked; then
+    log_err "apt/dpkg continua em uso após 2 min de espera. Encerre o outro processo (ou aguarde) e rode o script novamente."
+    exit 1
+  fi
+  log_ok "apt/dpkg liberado."
 else
   sudo rm -f /var/lib/dpkg/lock-frontend /var/cache/apt/archives/lock
 fi
