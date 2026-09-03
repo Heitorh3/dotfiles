@@ -84,6 +84,7 @@ PACOTES_APT_BASE=(
   gh
   filezilla
   vim
+  nfs-common
 )
 
 # Pacotes que dependem de repositórios de terceiros adicionados abaixo
