@@ -18,7 +18,7 @@ set -U fish_user_paths $fish_user_paths $HOME/.starship/cache
 # n 
 #set PATH $PATH/usr/local/n
 
-set -x ASDF_DATA_DIR $HOME/.asdf $PATH
+set -x ASDF_DATA_DIR $HOME/.asdf
 #set PATH $PATH/usr/local/bin/go/bin/
 
 #hugginface — carregado sob demanda do Bitwarden, rode `hf_token` quando precisar
@@ -107,17 +107,17 @@ function nas
 end
 
 # ASDF configuration code
-# if test -z $ASDF_DATA_DIR
-#     set _asdf_shims "$HOME/.asdf/shims"
-# else
-#     set _asdf_shims "$ASDF_DATA_DIR/shims"
-# end
+if test -z $ASDF_DATA_DIR
+    set _asdf_shims "$HOME/.asdf/shims"
+else
+    set _asdf_shims "$ASDF_DATA_DIR/shims"
+end
 
 # Do not use fish_add_path (added in Fish 3.2) because it
 # potentially changes the order of items in PATH
-# if not contains $_asdf_shims $PATH
-#     set -gx --prepend PATH $_asdf_shims
-# end
+if not contains $_asdf_shims $PATH
+    set -gx --prepend PATH $_asdf_shims
+end
 
 set --erase _asdf_shims
 
