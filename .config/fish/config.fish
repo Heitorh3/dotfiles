@@ -92,10 +92,18 @@ function airflow
 end
 
 function nas
-    mount -t nfs 192.168.100.43:/backup /home/heitor/netgear/ -o rw,hard,intr & 
-    mount -t nfs 192.168.100.43:/pessoal /home/heitor/netgear/ -o rw,hard,intr &
-    mount -t nfs 192.168.100.43:/cginf /home/heitor/netgear/ -o rw,hard,intr &
-    echo "🛢️ units assembled successfully!"    
+    echo "Montando unidades do NAS..."
+
+    sudo mount -t nfs 192.168.100.43:/backup /home/heitor/netgear/Backup -o rw,hard,noexec,nosuid,nodev
+    or return 1
+
+    sudo mount -t nfs 192.168.100.43:/pessoal /home/heitor/netgear/Pessoal -o rw,hard,noexec,nosuid,nodev
+    or return 1
+
+    sudo mount -t nfs 192.168.100.43:/cginf /home/heitor/netgear/Cginf -o rw,hard,noexec,nosuid,nodev
+    or return 1
+
+    echo "🛢️ Unidades montadas com sucesso!"
 end
 
 # ASDF configuration code
