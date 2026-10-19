@@ -158,3 +158,6 @@ end
 # <<< conda initialize <<<
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv fish)"
+
+# Added by LM Studio CLI tool (lms)
+set -gx PATH $PATH /home/heitor/.lmstudio/bin
