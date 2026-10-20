@@ -241,8 +241,8 @@
     "cursor-global": true,
     "cursor-workspace": true
   },
-"biome.suggestInstallingGlobally": false,
-"http.useLocalProxyConfiguration": false,
+  "biome.suggestInstallingGlobally": false,
+  "http.useLocalProxyConfiguration": false,
   "github.copilot.nextEditSuggestions.enabled": true,
   "python.analysis.typeCheckingMode": "basic",
   "terminal.integrated.inheritEnv": false,
@@ -269,6 +269,16 @@
   "vs-kubernetes": {
     "vscode-kubernetes.minikube-path-linux": "/home/heitor/.local/state/vs-kubernetes/tools/minikube/linux-amd64/minikube"
   },
-"git.ignoreRebaseWarning": true,
+  "git.ignoreRebaseWarning": true,
   "editor.formatOnSave": true,
+  "js/ts.experimental.useTsgo": true,
+  "chat.viewSessions.orientation": "stacked",
+  "yaml.schemas": {
+    "file:///home/heitor/.vscode/extensions/continue.continue-2.0.0-linux-x64/config-yaml-schema.json": [
+      ".continue/**/*.yaml"
+    ],
+    "file:///home/heitor/.vscode/extensions/continue.continue-2.1.0-linux-x64/config-yaml-schema.json": [
+      ".continue/**/*.yaml"
+    ]
+  },
 }
