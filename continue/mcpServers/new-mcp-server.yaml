@@ -1,0 +1,7 @@
+mcpServers:
+  - name: ai-memory
+    type: streamable-http
+    url: http://127.0.0.1:49374/mcp
+    requestOptions:
+      headers:
+        Authorization: "Bearer ${{ secrets.AI_MEMORY_TOKEN }}"

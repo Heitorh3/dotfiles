@@ -174,6 +174,19 @@ Esse mesmo padrão serve pra qualquer outro segredo: crie uma function nova
 (`.config/fish/functions/<nome>.fish`) seguindo o modelo de `hf_token.fish`,
 trocando o nome do item buscado no `bwcli get item`.
 
+## Gerando o token para o ai-memory
+
+```bash
+mkdir -p ~/.config/ai-memory
+chmod 700 ~/.config/ai-memory
+
+set -l ROOT_TOKEN (ai-memory generate-auth-token)
+
+printf 'AI_MEMORY_AUTH_TOKEN=%s\n' "$ROOT_TOKEN" > ~/.config/ai-memory/env
+
+chmod 600 ~/.config/ai-memory/env
+```
+
 ## Atualizando o repositório com mudanças locais
 
 Como os arquivos em `$HOME` viram symlinks para dentro deste repo, basta
