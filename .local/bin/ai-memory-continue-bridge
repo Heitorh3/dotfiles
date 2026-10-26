@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+# Ponte MCP do ai-memory para o Continue: envolve `ai-memory mcp-bridge --no-session-id`
+# e preenche workspace/project automaticamente a partir da pasta aberta no editor
+# (o Continue inicia o servidor stdio com cwd = pasta do workspace).
+# - remove workspace/project/cwd dos schemas, para o modelo não inventar valores;
+# - injeta workspace/project em toda chamada de ferramenta com escopo de projeto,
+#   exceto buscas globais/multi-escopo (global=true, scopes) e escritas scope="global".
+# Uso: ai-memory-continue-bridge [args extras do mcp-bridge, ex.: --server-url URL]
+import json
+import os
+import subprocess
+import sys
+import threading
+
+HIDDEN = ("workspace", "project", "cwd")
+
+
+WORKSPACE = os.environ.get("AI_MEMORY_WORKSPACE", "default")
+
+
+def detect_project():
+    if os.environ.get("AI_MEMORY_PROJECT"):
+        return os.environ["AI_MEMORY_PROJECT"]
+    try:
+        out = subprocess.run(
+            ["ai-memory-project", os.getcwd()], capture_output=True, text=True, timeout=5
+        ).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        out = ""
+    return out or os.path.basename(os.getcwd())
+
+
+PROJECT = detect_project()
+scoped_tools = set()  # ferramentas cujo schema aceita workspace+project
+
+
+def log(msg):
+    print(f"ai-memory-continue-bridge: {msg}", file=sys.stderr, flush=True)
+
+
+def rewrite_request(msg):
+    if msg.get("method") != "tools/call":
+        return msg
+    params = msg.get("params") or {}
+    name = params.get("name")
+    args = dict(params.get("arguments") or {})
+    for key in HIDDEN:
+        args.pop(key, None)
+    is_global = args.get("global") is True or args.get("scopes") or args.get("scope") == "global"
+    if name in scoped_tools and not is_global:
+        args["workspace"] = WORKSPACE
+        args["project"] = PROJECT
+    params["arguments"] = args
+    msg["params"] = params
+    return msg
+
+
+def rewrite_response(msg):
+    tools = (msg.get("result") or {}).get("tools")
+    if not isinstance(tools, list):
+        return msg
+    for tool in tools:
+        schema = tool.get("inputSchema") or {}
+        props = schema.get("properties") or {}
+        if "workspace" in props and "project" in props:
+            scoped_tools.add(tool.get("name"))
+        for key in HIDDEN:
+            props.pop(key, None)
+        if isinstance(schema.get("required"), list):
+            schema["required"] = [r for r in schema["required"] if r not in HIDDEN]
+    return msg
+
+
+def pump(src, dst, rewrite):
+    for line in src:
+        try:
+            line = json.dumps(rewrite(json.loads(line)), ensure_ascii=False) + "\n"
+        except (ValueError, AttributeError):
+            pass  # repassa sem alterar o que não for JSON-RPC
+        dst.write(line)
+        dst.flush()
+
+
+def main():
+    args = sys.argv[1:] or ["--server-url", "http://127.0.0.1:49374"]
+    child = subprocess.Popen(
+        ["ai-memory", "mcp-bridge", "--no-session-id", *args],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True, bufsize=1,
+    )
+    log(f"cwd={os.getcwd()} workspace={WORKSPACE} project={PROJECT}")
+    out = threading.Thread(target=pump, args=(child.stdout, sys.stdout, rewrite_response), daemon=True)
+    out.start()
+    try:
+        pump(sys.stdin, child.stdin, rewrite_request)
+    except BrokenPipeError:
+        pass
+    finally:
+        try:
+            child.stdin.close()
+        except BrokenPipeError:
+            pass
+    sys.exit(child.wait())
+
+
+if __name__ == "__main__":
+    main()

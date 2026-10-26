@@ -34,6 +34,8 @@ TARGETS=(
   ".config/Code/User/settings.json"
   ".config/Code/User/keybindings.json"
   ".local/bin/ai-memory-project"
+  ".local/bin/ai-memory-continue-bridge"
+  ".continue/config.yaml"
 )
 
 link_one() {
