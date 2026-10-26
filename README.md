@@ -14,6 +14,8 @@ ambiente após uma formatação.
 - Editor: `.config/Code/User/settings.json`, `.config/Code/User/keybindings.json`
   (preferências apenas — extensões não são versionadas aqui; ver nota sobre o
   token do GitHub abaixo)
+- Scripts: `.local/bin/ai-memory-project` (imprime o nome do projeto ai-memory
+  do repositório atual; usado pelas regras do Continue)
 
 ## O que **não** está aqui (de propósito)
 

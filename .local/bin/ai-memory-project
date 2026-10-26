@@ -1,0 +1,10 @@
+#!/bin/sh
+# Imprime o nome do projeto ai-memory para o diretório atual (ou o passado como $1):
+# remote upstream/origin sem host e sem .git; sem remote, o nome da pasta raiz do repo.
+cd "${1:-.}" 2>/dev/null || exit 1
+url=$(git remote get-url upstream 2>/dev/null || git remote get-url origin 2>/dev/null)
+if [ -n "$url" ]; then
+  printf '%s\n' "$url" | sed -E 's#^[a-zA-Z+]+://([^@/]*@)?[^/]+/##; s#^[^@/]+@[^:]+:##; s#\.git$##; s#/$##'
+else
+  basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+fi

@@ -33,6 +33,7 @@ TARGETS=(
   ".config/lazydocker/config.yml"
   ".config/Code/User/settings.json"
   ".config/Code/User/keybindings.json"
+  ".local/bin/ai-memory-project"
 )
 
 link_one() {
