@@ -19,6 +19,9 @@ ambiente após uma formatação.
   do repositório atual, ex.: `heitorh3-dotfiles`) e
   `.local/bin/ai-memory-continue-bridge` (ponte MCP usada pelo Continue: preenche
   `workspace`/`project` automaticamente a partir da pasta aberta no editor)
+- FileZilla: `.local/bin/filezilla-bitwarden` + `.local/share/applications/filezilla.desktop`
+  (abre o FileZilla pelo menu usando o SSH Agent do Bitwarden; no site use SFTP,
+  logon "Interativo" e nenhum arquivo de chave)
 
 ## O que **não** está aqui (de propósito)
 

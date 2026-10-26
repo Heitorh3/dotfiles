@@ -35,6 +35,8 @@ TARGETS=(
   ".config/Code/User/keybindings.json"
   ".local/bin/ai-memory-project"
   ".local/bin/ai-memory-continue-bridge"
+  ".local/bin/filezilla-bitwarden"
+  ".local/share/applications/filezilla.desktop"
   ".continue/config.yaml"
 )
 

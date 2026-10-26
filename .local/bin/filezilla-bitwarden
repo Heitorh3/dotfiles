@@ -1,0 +1,6 @@
+#!/bin/sh
+# Abre o FileZilla usando o SSH Agent do Bitwarden Desktop (chaves SFTP vêm do cofre).
+# Sem o socket do Bitwarden, mantém o SSH_AUTH_SOCK da sessão (agent do sistema).
+sock="$HOME/.bitwarden-ssh-agent.sock"
+[ -S "$sock" ] && export SSH_AUTH_SOCK="$sock"
+exec /usr/bin/filezilla "$@"
