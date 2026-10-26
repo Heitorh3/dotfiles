@@ -14,8 +14,11 @@ ambiente após uma formatação.
 - Editor: `.config/Code/User/settings.json`, `.config/Code/User/keybindings.json`
   (preferências apenas — extensões não são versionadas aqui; ver nota sobre o
   token do GitHub abaixo)
+- Continue: `.continue/config.yaml` (modelos locais e servidor MCP do ai-memory)
 - Scripts: `.local/bin/ai-memory-project` (imprime o nome do projeto ai-memory
-  do repositório atual; usado pelas regras do Continue)
+  do repositório atual, ex.: `heitorh3-dotfiles`) e
+  `.local/bin/ai-memory-continue-bridge` (ponte MCP usada pelo Continue: preenche
+  `workspace`/`project` automaticamente a partir da pasta aberta no editor)
 
 ## O que **não** está aqui (de propósito)
 
