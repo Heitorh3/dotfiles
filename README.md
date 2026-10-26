@@ -135,6 +135,39 @@ disponível no momento):
 4. Rode `./install.sh` para linkar o `.ssh/config`, depois `ssh-add
    ~/.ssh/id_ed25519` e teste com `ssh -T git@github.com`.
 
+### FileZilla (SFTP) com as chaves do Bitwarden
+
+O FileZilla usa o agent apontado por `$SSH_AUTH_SOCK`, mas na sessão gráfica
+essa variável aponta para o agent do GNOME (`/run/user/1000/gcr/ssh`) — o
+`config.fish` só troca para o Bitwarden dentro do terminal. Por isso o repo
+traz `.local/bin/filezilla-bitwarden` (abre o FileZilla com
+`SSH_AUTH_SOCK=~/.bitwarden-ssh-agent.sock` quando o socket existe) e
+`.local/share/applications/filezilla.desktop`, que sobrescreve o atalho do
+sistema para chamar esse script.
+
+1. Com o Bitwarden Desktop aberto e o SSH Agent habilitado (veja acima), rode
+   `./install.sh` para linkar o script e o atalho. Se o menu ainda abrir o
+   atalho antigo, saia e entre de novo na sessão.
+2. Garanta que o servidor tem a sua chave pública no `~/.ssh/authorized_keys`
+   (pelo terminal, que já usa o agent do Bitwarden):
+   ```bash
+   ssh-copy-id usuario@servidor
+   ```
+3. Abra o FileZilla pelo menu e crie o site em **Arquivo → Gerenciador de
+   Sites → Novo site**:
+   - **Protocolo:** SFTP – SSH File Transfer Protocol
+   - **Host** e **Porta** (22 por padrão) — o FileZilla não lê o
+     `~/.ssh/config`, então use o host real, não um alias
+   - **Tipo de logon:** Interativo (ou Normal com senha em branco)
+   - **Usuário:** o seu usuário no servidor
+   - **Não** informe arquivo de chave: sem ele o FileZilla usa as chaves do
+     agent
+4. Conecte. Na primeira vez o Bitwarden pede para autorizar o uso da chave.
+
+Para testar sem o atalho, abra pelo terminal com `filezilla &` (herda o
+`$SSH_AUTH_SOCK` do fish). Se o Bitwarden não estiver rodando, o script mantém
+o agent padrão do sistema.
+
 ## Segredos via Bitwarden
 
 Em vez de hardcodar tokens em arquivos de config, eles ficam guardados no
