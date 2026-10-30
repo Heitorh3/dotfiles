@@ -66,6 +66,14 @@ for t in "${TARGETS[@]}"; do
   link_one "$t"
 done
 
+if command -v ollama-symlinks >/dev/null 2>&1; then
+  echo "ok (já instalado): ollama-symlinks"
+else
+  echo "Instalando ollama-symlinks..."
+  curl -fsSL https://raw.githubusercontent.com/qaribhaider/ollama-to-lmstudio-symlinks/main/install.sh | bash \
+    || echo "aviso: falha ao instalar ollama-symlinks (seguindo em frente)"
+fi
+
 echo ""
 echo "Concluído. Backups (se houve) em: $BACKUP_DIR"
 echo ""
