@@ -15,6 +15,11 @@ ambiente após uma formatação.
   (preferências apenas — extensões não são versionadas aqui; ver nota sobre o
   token do GitHub abaixo)
 - Continue: `.continue/config.yaml` (modelos locais e servidor MCP do ai-memory)
+- Claude Code: `.claude/settings.json` (tema, hooks do ai-memory e lista de
+  plugins, restaurados pelo `install.sh`) e
+  `.claude/skills/usar-prompt` (o resto de `~/.claude` fica fora: credenciais,
+  histórico e sessões são privados; as skills `ai-memory-*` são recriadas pelo
+  `ai-memory setup` e `skills/synced/` vem da conta)
 - Scripts: `.local/bin/ai-memory-project` (imprime o nome do projeto ai-memory
   do repositório atual, ex.: `heitorh3-dotfiles`) e
   `.local/bin/ai-memory-continue-bridge` (ponte MCP usada pelo Continue: preenche
@@ -66,6 +71,21 @@ Depois de rodar o script:
    versionadas aqui).
 3. Instale as ferramentas que os configs esperam (fish, starship, asdf, bat,
    btop, htop, lazygit, lazydocker) via seu gerenciador de pacotes preferido.
+
+### Plugins do Claude Code
+
+Só a **lista** de plugins é versionada, em `.claude/settings.json`; os arquivos
+ficam em `~/.claude/plugins`, fora do repositório. Para um plugin novo entrar
+na lista, instale com escopo de usuário e faça o commit do arquivo:
+
+```bash
+claude plugin marketplace add <dono/repo> --scope user
+claude plugin install <plugin>@<marketplace> --scope user
+```
+
+Na outra máquina, `git pull` e `./install.sh` adicionam os marketplaces e
+instalam o que faltar (precisa de `claude` e `jq` instalados). Plugins
+removidos da lista não são desinstalados automaticamente.
 
 ## Restaurando as chaves SSH
 

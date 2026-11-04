@@ -38,6 +38,8 @@ TARGETS=(
   ".local/bin/filezilla-bitwarden"
   ".local/share/applications/filezilla.desktop"
   ".continue/config.yaml"
+  ".claude/settings.json"
+  ".claude/skills/usar-prompt"
 )
 
 link_one() {
@@ -73,6 +75,41 @@ else
   curl -fsSL https://raw.githubusercontent.com/qaribhaider/ollama-to-lmstudio-symlinks/main/install.sh | bash \
     || echo "aviso: falha ao instalar ollama-symlinks (seguindo em frente)"
 fi
+
+# Plugins do Claude Code: a lista versionada fica em .claude/settings.json
+# (enabledPlugins e extraKnownMarketplaces); os arquivos são baixados aqui.
+install_claude_plugins() {
+  local settings="$DOTFILES_DIR/.claude/settings.json"
+  local name source plugin
+
+  if ! command -v claude >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
+    echo "aviso: claude ou jq não encontrado; instale-os e rode ./install.sh de novo para restaurar os plugins"
+    return
+  fi
+
+  while IFS=$'\t' read -r name source; do
+    if claude plugin marketplace list </dev/null 2>/dev/null | grep -qF "$name"; then
+      echo "ok (já adicionado): marketplace $name"
+    else
+      echo "Adicionando marketplace $name..."
+      claude plugin marketplace add "$source" --scope user </dev/null \
+        || echo "aviso: falha ao adicionar o marketplace $name (seguindo em frente)"
+    fi
+  done < <(jq -r '.extraKnownMarketplaces // {} | to_entries[]
+    | [.key, (.value.source | .repo // .url // .path)] | @tsv' "$settings")
+
+  while IFS= read -r plugin; do
+    if claude plugin list </dev/null 2>/dev/null | grep -qF "$plugin"; then
+      echo "ok (já instalado): plugin $plugin"
+    else
+      echo "Instalando plugin $plugin..."
+      claude plugin install "$plugin" --scope user </dev/null \
+        || echo "aviso: falha ao instalar o plugin $plugin (seguindo em frente)"
+    fi
+  done < <(jq -r '.enabledPlugins // {} | to_entries[] | select(.value == true) | .key' "$settings")
+}
+
+install_claude_plugins
 
 echo ""
 echo "Concluído. Backups (se houve) em: $BACKUP_DIR"
