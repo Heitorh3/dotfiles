@@ -161,3 +161,5 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv fish)"
 
 # Added by LM Studio CLI tool (lms)
 set -gx PATH $PATH /home/heitor/.lmstudio/bin
+
+string match -q "$TERM_PROGRAM" "kiro" and . (kiro --locate-shell-integration-path fish)

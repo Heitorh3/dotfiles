@@ -141,3 +141,5 @@ export NVM_DIR="$HOME/.nvm"
 
 # Added by LM Studio CLI tool (lms)
 export PATH="$PATH:/home/heitor/.lmstudio/bin"
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path bash)"
