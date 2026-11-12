@@ -47,6 +47,12 @@ link_one() {
   local src="$DOTFILES_DIR/$rel"
   local dest="$HOME/$rel"
 
+  # Evita criar symlink quebrado se o arquivo não existir no repositório.
+  if [ ! -e "$src" ]; then
+    echo "aviso: $rel não existe em $DOTFILES_DIR (pulando)"
+    return
+  fi
+
   mkdir -p "$(dirname "$dest")"
 
   if [ -e "$dest" ] || [ -L "$dest" ]; then
@@ -76,19 +82,50 @@ else
     || echo "aviso: falha ao instalar ollama-symlinks (seguindo em frente)"
 fi
 
+# copilot-cli (comando `ms`): instala só se faltar e loga só se a conta
+# ainda não estiver no cache. Falhas aqui não interrompem o restante.
+install_copilot_cli() {
+  local account="heitor.neto@gestao.gov.br"
+
+  if command -v ms >/dev/null 2>&1; then
+    echo "ok (já instalado): copilot-cli"
+  elif command -v npm >/dev/null 2>&1; then
+    echo "Instalando copilot-cli..."
+    npm install -g @microsoft/managed-apps-cli \
+      || { echo "aviso: falha ao instalar o copilot-cli (seguindo em frente)"; return; }
+  else
+    echo "aviso: npm não encontrado; instale o Node e rode ./install.sh de novo para instalar o copilot-cli"
+    return
+  fi
+
+  if ms auth status 2>/dev/null | grep -qiF "$account"; then
+    echo "ok (já logado): copilot-cli como $account"
+  else
+    echo "Logando no copilot-cli..."
+    ms auth login --account "$account" \
+      || echo "aviso: falha no login do copilot-cli (rode 'ms auth login' depois)"
+  fi
+}
+
+install_copilot_cli
+
 # Plugins do Claude Code: a lista versionada fica em .claude/settings.json
 # (enabledPlugins e extraKnownMarketplaces); os arquivos são baixados aqui.
 install_claude_plugins() {
   local settings="$DOTFILES_DIR/.claude/settings.json"
-  local name source plugin
+  local name source plugin marketplaces installed
 
   if ! command -v claude >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
     echo "aviso: claude ou jq não encontrado; instale-os e rode ./install.sh de novo para restaurar os plugins"
     return
   fi
 
+  # Consulta cada lista uma vez só, em vez de chamar o claude a cada item.
+  marketplaces="$(claude plugin marketplace list </dev/null 2>/dev/null || true)"
+  installed="$(claude plugin list </dev/null 2>/dev/null || true)"
+
   while IFS=$'\t' read -r name source; do
-    if claude plugin marketplace list </dev/null 2>/dev/null | grep -qF "$name"; then
+    if grep -qF -- "$name" <<<"$marketplaces"; then
       echo "ok (já adicionado): marketplace $name"
     else
       echo "Adicionando marketplace $name..."
@@ -99,7 +136,7 @@ install_claude_plugins() {
     | [.key, (.value.source | .repo // .url // .path)] | @tsv' "$settings")
 
   while IFS= read -r plugin; do
-    if claude plugin list </dev/null 2>/dev/null | grep -qF "$plugin"; then
+    if grep -qF -- "$plugin" <<<"$installed"; then
       echo "ok (já instalado): plugin $plugin"
     else
       echo "Instalando plugin $plugin..."
